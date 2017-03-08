@@ -2,3 +2,4 @@
 
 2、增加pluginext文件夹，保存font-awesome html5shiv ionicons respond
 
+3、"C:\ProgramFiles\Google\Chrome\Application\chrome.exe" --enable-file-cookies--allow-file-access-from-files
