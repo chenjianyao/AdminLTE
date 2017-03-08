@@ -1,0 +1,4 @@
+1、AdminLTE默认使用fonts.googleapis.com字体，可到dist/css/AdminLTE.css注释第一行
+
+2、增加pluginext文件夹，保存font-awesome html5shiv ionicons respond
+
