@@ -256,18 +256,30 @@ desired effect
       <ul class="sidebar-menu">
         <li class="header">HEADER</li>
         <!-- Optionally, you can add icons to the links -->
-        <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
+        <li class="active1"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
         <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-        <li class="treeview">
-          <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
+        <li class="treeview active">
+          <a href="#"><i class="fa fa-link"></i> <span class="menu-one-title">XX管理</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="starter-content.html"   target="menuFrame" >starter-content页面</a></li>
-            <li><a href="starter-content1.html"  target="menuFrame" >starter-content1页面1</a></li>
-            <li><a href="starter-content2.html"  target="menuFrame" >starter-content2页面2</a></li>
+            <li><a href="javascript:void(0)" onclick="return loadPage(this)" data-url="starter-content.html" data-text="查询页面">查询页面</a></li>
+            <li><a href="javascript:void(0)" onclick="return loadPage(this)" data-url="starter-content1.html" data-text="新增页面">新增页面</a></li>
+            <li><a href="javascript:void(0)" onclick="return loadPage(this)" data-url="starter-content2.html" data-text="修改页面">修改页面</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#"><i class="fa fa-link"></i> <span class="menu-one-title">日志管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="javascript:void(0)" onclick="return loadPage(this)" data-url="starter-content.html" data-text="新增页面">新增页面</a></li>
+            <li><a href="javascript:void(0)" onclick="return loadPage(this)" data-url="starter-content1.html" data-text="修改页面">修改页面</a></li>
+            <li><a href="javascript:void(0)" onclick="return loadPage(this)" data-url="starter-content2.html" data-text="查询页面">查询页面</a></li>
           </ul>
         </li>
       </ul>
@@ -280,25 +292,17 @@ desired effect
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     
-    <iframe id="menuFrame" name="menuFrame" src="starter-content.html" style="overflow:visible;" scrolling="yes" frameborder="no" height="100%" width="100%"></iframe>
-
-    <!-- <section class="content-header">
-      <h1>
-        Page Header
-        <small>Optional description</small>
-      </h1>
+    <section class="content-header">
+      <h1><span id="cotent-header-title">欢迎</span><small></small></h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-        <li class="active">Here</li>
+        <li><a href="#"><i class="fa fa-dashboard"></i> <span id="cotent-header-one">首页</span></a></li><li class="active"><span id="cotent-header-two">欢迎</span></li>
       </ol>
-    </section> -->
+    </section>
 
     <!-- Main content -->
-    <!-- <section class="content">
-
+    <section class="content">
       Your Page Content Here
-
-    </section> -->
+    </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
@@ -406,10 +410,24 @@ desired effect
      user experience. Slimscroll is required when using the
      fixed layout. -->
  <script type="text/javascript">
-   $(window, ".wrapper").resize(function () {
-        _this.fix();
-        _this.fixSidebar();
-    });
+  function loadPage(obj) {
+      $( ".content" ).load( $(obj).attr('data-url'), function( response, status, xhr ) {
+          $(".content").html(html);
+          $("#cotent-header-title").text($(obj).attr('data-text'));
+          $("#cotent-header-one").text($(obj).parent().parent().parent().find('.menu-one-title').text());
+          $("#cotent-header-two").text($(obj).text());
+      });
+
+      /*$.get($(obj).attr('data-url') + "?n=" + Math.random()).done(function (html) {
+          $(".content").html(html);
+          $("#cotent-header-title").text($(obj).attr('data-text'));
+          $("#cotent-header-one").text($(obj).parent().parent().parent().find('.menu-one-title').text());
+          $("#cotent-header-two").text($(obj).text());
+      });*/
+
+  return false;
+
+  }
  </script>    
 </body>
 </html>
