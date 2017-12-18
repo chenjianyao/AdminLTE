@@ -1,3 +1,47 @@
+<!-- 图书管理表格 -->
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box">
+      <div class="box-header">
+        <h3 class="box-title">图书列表<button onclick="exportExcel();" class="btn-sm info">导出Excel</button></h3>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        <table id="bookTable" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>序号</th>
+              <th>图书编号</th>
+              <th>图书名称</th>
+              <th>馆藏数量</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <shiro:hasPermission name="book:add">
+          <tfoot>
+            <tr>
+              <td><a href="javascript:add();">新增图书</a></td>
+            </tr>
+          </tfoot>
+          </shiro:hasPermission>
+        </table>
+      </div>
+      <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+
+
+
+
+
+
+
+
+
 <div class="row">
         <div class="col-xs-12">
           <div class="box">
@@ -883,6 +927,51 @@
         <!-- /.col -->
       </div>
 
+
+
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document">
+        <form id="formBook" action="" method="post">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title"  id="titleBook">新增图书</h4>
+            </div>
+            <div class="modal-body">
+
+              <div class="form-group">
+                <label for="bookName" class="control-label">图书名称：</label>
+                <input type="text" id="bookName" class="form-control" name="name" required="required">
+              </div>
+              <div class="form-group">
+                <label for="bookNum" class="control-label" >馆藏数量:</label>
+                <input class="form-control" id="bookNum" type="number" name="number" min="1" required="required"></input>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button type="submit" class="btn btn-primary" id="btnBook">新增</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script src="../plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="../plugins/datatables/dataTables.bootstrap.min.js"></script>
 
@@ -898,7 +987,130 @@ $(function () {
       "info": true,
       "autoWidth": false
     });
+    var table = $('#bookTable').DataTable({
+        "language" : { //表格国际化
+            "processing" : "处理中...",
+            "lengthMenu" : "显示 _MENU_ 项结果",
+            "zeroRecords" : "没有匹配结果",
+            "info" : "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+            "infoEmpty" : "显示第 0 至 0 项结果，共 0 项",
+            "infoFiltered" : "(由 _MAX_ 项结果过滤)",
+            "infoPostFix" : "",
+            "search" : "搜索:",
+            "searchPlaceholder" : "搜索...",
+            "url" : "mock/getBooks.json",
+            "emptyTable" : "表中数据为空",
+            "loadingRecords" : "载入中...",
+            "infoThousands" : ",",
+            "paginate" : {
+              "first" : "首页",
+              "previous" : "上页",
+              "next" : "下页",
+              "last" : "末页"
+            }
+        },
+        "bProcessing": true,//保持加载提示
+        "bStateSave": true,//加载记忆页码
+        "ajax": "mock/getBooks.json",
+        "columns": [
+            {"data": "bookId"},
+            {"data": "name"},
+            {"data": "number"}
+        ],
+        "columnDefs": [{
+            "targets": -1,//del
+            "data": null,
+            "defaultContent": "<button id='edit' class='btn btn-primary' type='button'>编辑</button>" +
+            "<button id='del' class='btn btn-primary' type='button'>删除</button>"
+        }
+        ]
+    });
+
+ /*   
+    $.get("mock/getBooks.json", function(data) {
+        console.info(JSON.stringify(data));
+        var t = $("#bookTable").DataTable({
+          "language" : { //表格国际化
+            "processing" : "处理中...",
+            "lengthMenu" : "显示 _MENU_ 项结果",
+            "zeroRecords" : "没有匹配结果",
+            "info" : "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+            "infoEmpty" : "显示第 0 至 0 项结果，共 0 项",
+            "infoFiltered" : "(由 _MAX_ 项结果过滤)",
+            "infoPostFix" : "",
+            "search" : "搜索:",
+            "searchPlaceholder" : "搜索...",
+            "url" : "mock/getBooks.json",
+            "emptyTable" : "表中数据为空",
+            "loadingRecords" : "载入中...",
+            "infoThousands" : ",",
+            "paginate" : {
+              "first" : "首页",
+              "previous" : "上页",
+              "next" : "下页",
+              "last" : "末页"
+            },
+            "aria" : {
+              paginate : {
+                first : '首页',
+                previous : '上页',
+                next : '下页',
+                last : '末页'
+              },
+              "sortAscending" : ": 以升序排列此列",
+              "sortDescending" : ": 以降序排列此列"
+            },
+            "decimal" : "-",
+            "thousands" : "."
+          },
+          "data" : data,
+          "columns" : [ {
+            "data" : null
+          }, {
+            "data" : "bookId"
+          }, {
+            "data" : "name"
+          }, {
+            "data" : "number"
+          }, {
+            "data" : null
+          } ],
+          "columnDefs" : [ {
+            "searchable" : false,
+            "orderable" : false,
+            "targets" : 0
+          } ,{
+            "searchable" : false,
+            "orderable" : false,
+            "targets" : 4
+          } ,{
+             //   指定第最后一列
+                "targets": 4,
+                "render": function(data, type, row, meta) {
+                  var result="<shiro:hasPermission name='book:delete'><a title='删除' class='delete glyphicon glyphicon-remove-sign' href='javascript:del("+data.bookId+");' ></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</shiro:hasPermission >"+
+                    "<shiro:hasPermission name='book:update'><a title='编辑该项' class='edit glyphicon glyphicon-edit' href='javascript:update("+data.bookId+",\""+data.name+"\","+data.number+")' ></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</shiro:hasPermission >"+
+                    "&nbsp;&nbsp;&nbsp;<shiro:hasPermission name='book:appoint'><a title='预约' class='glyphicon glyphicon-hand-up' href='javascript:appoint("+data.bookId+")' ></a></shiro:hasPermission >";
+                    return result;
+                }
+          }],
+          "order" : [ [ 1, 'asc' ] ]
+        });
+        //给表格多加一列索引
+        t.on('order.dt search.dt', function() {
+          t.column(0, {
+            search : 'applied',
+            order : 'applied'
+          }).nodes().each(function(cell, i) {
+            cell.innerHTML = i + 1;
+          });
+        }).draw();
+        ;
+    });
+*/
+
+
   });
+
 </script>
 
    

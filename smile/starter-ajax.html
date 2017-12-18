@@ -411,12 +411,13 @@ desired effect
      fixed layout. -->
  <script type="text/javascript">
   function loadPage(obj) {
-      $( ".content" ).load( $(obj).attr('data-url'), function( response, status, xhr ) {
-          $(".content").html(html);
-          $("#cotent-header-title").text($(obj).attr('data-text'));
-          $("#cotent-header-one").text($(obj).parent().parent().parent().find('.menu-one-title').text());
-          $("#cotent-header-two").text($(obj).text());
-      });
+      $("#cotent-header-title").text($(obj).attr('data-text'));
+      $("#cotent-header-one").text($(obj).parent().parent().parent().find('.menu-one-title').text());
+      $("#cotent-header-two").text($(obj).text());
+      $(".content").load($(obj).attr('data-url'));
+
+      /*$( ".content" ).load( $(obj).attr('data-url'), function( response, status, xhr ) {
+      });*/
 
       /*$.get($(obj).attr('data-url') + "?n=" + Math.random()).done(function (html) {
           $(".content").html(html);
